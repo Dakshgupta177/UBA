@@ -3,8 +3,12 @@ import {ApiError} from '../utils/ApiError'
 import {User} from '../models/user.model'
 import bcrypt from 'bcryptjs'
 import { generateToken } from '../utils/tokenfunctions'
+import { isDBConnected } from '../db/db'
 
 const signup = asynchandler(async(req, res) => {
+    if (!isDBConnected()) {
+        throw new ApiError(500, 'Database connection failed');
+    }
     const {name, password, email} = req.body;
 
     if([name, password, email].some(field => !field || field.trim() === "")) {
@@ -29,6 +33,9 @@ const signup = asynchandler(async(req, res) => {
 })
 
 const login = asynchandler(async(req, res) => {
+    if (!isDBConnected()) {
+        throw new ApiError(500, 'Database connection failed');
+    }
     const {email, password} = req.body;
     if([email, password].some(field => !field || field.trim() === "")) {
         throw new ApiError(400, "All fields are required")
@@ -57,4 +64,17 @@ const login = asynchandler(async(req, res) => {
         message: "Login successful"
     })
 })
-export {signup, login}
+
+const logout = asynchandler(async(req, res) => {
+    res.clearCookie("token", {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "strict",
+    });
+
+    return res.status(200).json({
+        success: true,
+        message: "Logged out successfully"
+    });
+})
+export {signup, login, logout}
