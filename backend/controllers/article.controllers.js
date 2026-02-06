@@ -1,6 +1,6 @@
-import { asyncHandler } from "../utils/asynchandler";
-import { ApiError } from "../utils/ApiError";
-import { Article } from "../models/article.model";
+import  asyncHandler  from "../utils/asynchandler.js";
+import { ApiError } from "../utils/ApiError.js";
+import { Article } from "../models/article.model.js";
 
 const createArticle = asyncHandler(async (req, res) => {
   const {title, body, authorId} = req.body;

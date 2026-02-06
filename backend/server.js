@@ -1,10 +1,11 @@
 import express from 'express';
 import 'dotenv/config';
+import cookieParser from "cookie-parser";
 
 //Local
 import { connectDB, isDBConnected } from './db/db.js';
 import { notificationRouter } from './routes/notification.routes.js';
-import { articleRouter } from './routes/article.routes.js';
+import  articleRouter  from './routes/article.routes.js';
 import authRouter from './routes/auth.routes.js'
 
 const app = express();
