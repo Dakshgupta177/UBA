@@ -1,5 +1,13 @@
-import express from 'express'
-import { createArticle, updateArticle, deleteArticle, getAllArticles, getArticleById } from "../controllers/article.controllers.js";
+import express from 'express';
+
+//Local
+import {
+  createArticle,
+  updateArticle,
+  deleteArticle,
+  getAllArticles,
+  getArticleById,
+} from '../controllers/article.controllers.js';
 
 const router = express.Router();
 
