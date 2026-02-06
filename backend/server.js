@@ -2,10 +2,12 @@ import express from 'express';
 import 'dotenv/config';
 
 //Local
-import { connectDB, isDBConnected } from './db/db.js';
+import { connectDB} from './db/db.js';
 import { notificationRouter } from './routes/notification.routes.js';
-import { articleRouter } from './routes/article.routes.js';
+import  articleRouter  from './routes/article.routes.js';
+import galleryRouter from './routes/gallery.routes.js'
 import authRouter from './routes/auth.routes.js'
+import cookieParser from 'cookie-parser';
 
 const app = express();
 
@@ -26,6 +28,7 @@ app.use(cookieParser())
 app.use('/api', notificationRouter);
 app.use('/api/articles', articleRouter);
 app.use('/api/auth', authRouter);
+app.use('/api/gallery',galleryRouter)
 
 const port = process.env.PORT || 5000;
 

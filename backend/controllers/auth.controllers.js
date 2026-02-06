@@ -1,11 +1,11 @@
-import {asynchandler} from '../utils/asynchandler'
-import {ApiError} from '../utils/ApiError'
-import {User} from '../models/user.model'
+import {asyncHandler} from '../utils/asynchandler.js'
+import {ApiError} from '../utils/ApiError.js'
+import {User} from '../models/user.model.js'
 import bcrypt from 'bcryptjs'
-import { generateToken } from '../utils/tokenfunctions'
-import { isDBConnected } from '../db/db'
+import { generateToken } from '../utils/tokenfunctions.js'
+import { isDBConnected } from '../db/db.js'
 
-const signup = asynchandler(async(req, res) => {
+const signup = asyncHandler(async(req, res) => {
     if (!isDBConnected()) {
         throw new ApiError(500, 'Database connection failed');
     }
@@ -32,7 +32,7 @@ const signup = asynchandler(async(req, res) => {
     })
 })
 
-const login = asynchandler(async(req, res) => {
+const login = asyncHandler(async(req, res) => {
     if (!isDBConnected()) {
         throw new ApiError(500, 'Database connection failed');
     }
@@ -65,7 +65,7 @@ const login = asynchandler(async(req, res) => {
     })
 })
 
-const logout = asynchandler(async(req, res) => {
+const logout = asyncHandler(async(req, res) => {
     res.clearCookie("token", {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
