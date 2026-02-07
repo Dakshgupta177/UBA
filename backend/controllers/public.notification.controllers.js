@@ -1,6 +1,6 @@
 //Local
 import { Notification } from '../models/notification.model.js';
-import { asyncHandler } from '../utils/asynchandler.js';
+import asyncHandler from '../utils/asynchandler.js';
 import { ApiError } from '../utils/ApiError.js';
 import { isDBConnected } from '../db/db.js';
 

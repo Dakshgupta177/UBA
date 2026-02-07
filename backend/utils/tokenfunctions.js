@@ -3,7 +3,7 @@ import 'dotenv/config';
 
 //Local
 import { ApiError } from './ApiError.js';
-import { asyncHandler } from './asynchandler.js';
+import asyncHandler from './asynchandler.js';
 
 const generateToken = (user) => {
   return jwt.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: '7d' });
