@@ -15,10 +15,10 @@ const photoSchema = new mongoose.Schema(
       type: String, 
       required: [true, "Cloudinary ID is required"],
     },
-    owner: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
-    },
+    // owner: {
+    //   type: mongoose.Schema.Types.ObjectId,
+    //   ref: "User",
+    // },
   },
   {
     timestamps: true, 
