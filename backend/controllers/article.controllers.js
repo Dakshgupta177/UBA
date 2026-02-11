@@ -5,14 +5,14 @@ import { Article } from "../models/article.model.js";
 const createArticle = asyncHandler(async (req, res) => {
   const {title, body, authorId} = req.body;
 
-  if(!title || !body || !authorId) {
+  if(!title || !body) {
     throw new ApiError(400, "All information is required")
   }
 
   const article = await Article.create({
     title,
     body,
-    authorId
+    authorId: req.user._id
   });
   
   return res.status(201).json({
