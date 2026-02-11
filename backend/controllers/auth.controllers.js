@@ -11,26 +11,27 @@ const signup = asyncHandler(async(req, res) => {
     }
     const {name, password, email} = req.body;
 
-    if([name, password, email].some(field => !field || field.trim() === "")) {
-        throw new ApiError(400, "All fields are required")
-    }
+const signup = asyncHandler(async (req, res) => {
+  if (!isDBConnected()) {
+    throw new ApiError(500, 'Database connection failed');
+  }
+  const { name, password, email } = req.body;
 
-    const existinguser = await User.findOne({email});
-    if(existinguser) {
-        throw new ApiError(400, "User already exists")
-    }
-    const hashpassword = await bcrypt.hash(password, 10)
+  if ([name, password, email].some((field) => !field || field.trim() === '')) {
+    throw new ApiError(400, 'All fields are required');
+  }
 
-    const user = await User.create({
-        name, email,
-        password: hashpassword
-    })
+  const existinguser = await User.findOne({ email });
+  if (existinguser) {
+    throw new ApiError(400, 'User already exists');
+  }
+  const hashpassword = await bcrypt.hash(password, 10);
 
-    return res.status(200).json({
-        success: true,
-        message: "SignUp Done"
-    })
-})
+  const user = await User.create({
+    name,
+    email,
+    password: hashpassword,
+  });
 
 const login = asyncHandler(async(req, res) => {
     if (!isDBConnected()) {
@@ -50,20 +51,25 @@ const login = asyncHandler(async(req, res) => {
         throw new ApiError(400, "Invalid Password")
     }
 
-    const token = generateToken(user)
+const login = asyncHandler(async (req, res) => {
+  if (!isDBConnected()) {
+    throw new ApiError(500, 'Database connection failed');
+  }
+  const { email, password } = req.body;
+  if ([email, password].some((field) => !field || field.trim() === '')) {
+    throw new ApiError(400, 'All fields are required');
+  }
 
-    res.cookie("token", token, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-        sameSite: "strict",
-        maxAge: 7 * 24 * 60 * 60 * 1000
-    });
+  const user = await User.findOne({ email });
+  if (!user) {
+    throw new ApiError(404, 'User not found');
+  }
+  const comparePass = await bcrypt.compare(password, user.password);
+  if (!comparePass) {
+    throw new ApiError(400, 'Invalid Password');
+  }
 
-    return res.status(200).json({
-        success:true,
-        message: "Login successful"
-    })
-})
+  const token = generateToken(user);
 
 const logout = asyncHandler(async(req, res) => {
     res.clearCookie("token", {
@@ -72,9 +78,22 @@ const logout = asyncHandler(async(req, res) => {
         sameSite: "strict",
     });
 
-    return res.status(200).json({
-        success: true,
-        message: "Logged out successfully"
-    });
-})
-export {signup, login, logout}
+  return res.status(200).json({
+    success: true,
+    message: 'Login successful',
+  });
+});
+
+const logout = asyncHandler(async (req, res) => {
+  res.clearCookie('token', {
+    httpOnly: true,
+    secure: false,
+    sameSite: 'lax',
+  });
+
+  return res.status(200).json({
+    success: true,
+    message: 'Logged out successfully',
+  });
+});
+export { signup, login, logout };
