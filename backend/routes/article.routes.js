@@ -1,11 +1,5 @@
-import express from 'express';
-import {
-  createArticle,
-  updateArticle,
-  deleteArticle,
-  getAllArticles,
-  getArticleById,
-} from '../controllers/article.controllers.js';
+import express from 'express'
+import { createArticle, updateArticle, deleteArticle, getAllArticles, getArticleById } from "../controllers/article.controllers.js";
 import {authMiddleware} from '../middleware/auth.middleware.js';
 import {editorOnly} from '../middleware/editor.middleware.js';
 
