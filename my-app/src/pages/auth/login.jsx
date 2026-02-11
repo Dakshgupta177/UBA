@@ -30,20 +30,35 @@ const Login = () => {
   };
 
   return (
-    <form onSubmit={handleLogin}>
-      <h2>Admin Login</h2>
-      <input
-        type="email"
-        placeholder="Email"
-        onChange={(e) => setEmail(e.target.value)}
-      />
-      <input
-        type="password"
-        placeholder="Password"
-        onChange={(e) => setPassword(e.target.value)}
-      />
-      <button type="submit">Login</button>
-    </form>
+    <div className="min-h-screen flex items-center justify-center bg-white">
+      <form
+        onSubmit={handleLogin}
+        className="w-75 border border-black p-8 flex flex-col gap-4"
+      >
+        <h2 className="text-center text-lg font-medium">Admin Login</h2>
+
+        <input
+          type="email"
+          placeholder="Email"
+          onChange={(e) => setEmail(e.target.value)}
+          className="border border-black p-2 outline-none"
+        />
+
+        <input
+          type="password"
+          placeholder="Password"
+          onChange={(e) => setPassword(e.target.value)}
+          className="border border-black p-2 outline-none"
+        />
+
+        <button
+          type="submit"
+          className="bg-black text-white py-2 hover:opacity-80"
+        >
+          Login
+        </button>
+      </form>
+    </div>
   );
 };
 

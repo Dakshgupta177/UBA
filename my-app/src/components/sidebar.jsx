@@ -12,7 +12,7 @@ const Sidebar = () => {
   };
 
   return (
-    <div style={{ width: '200px', background: '#eee', padding: '20px' }}>
+    <div className="w-50bg-white border-r border-black p-5 min-h-screen flex flex-col">
       <h3>Admin Panel</h3>
       <ul>
         <li>
@@ -25,7 +25,12 @@ const Sidebar = () => {
           <Link to="/admin/contacts">Manage Contacts</Link>
         </li>
       </ul>
-      <button onClick={handleLogout}>Logout</button>
+      <button
+        onClick={handleLogout}
+        className="mt-auto w-full bg-black text-white py-2"
+      >
+        Logout
+      </button>
     </div>
   );
 };

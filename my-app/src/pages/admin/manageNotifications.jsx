@@ -16,11 +16,10 @@ const ManageNotifications = () => {
 
   const [editingId, setEditingId] = useState(null);
 
-  // Fetch all notifications
   const fetchNotifications = async () => {
     try {
       const data = await getNotifications();
-      setNotifications(data.data); // because backend returns { success, data }
+      setNotifications(data.data);
     } catch (error) {
       console.error('Fetch error:', error);
     }
@@ -30,23 +29,21 @@ const ManageNotifications = () => {
     fetchNotifications();
   }, []);
 
-  // Handle form input
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  // Submit (Create or Update)
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
-      if (editingId) {
+      if (editingId && editingId !== 'new') {
         await updateNotification(editingId, formData);
-        setEditingId(null);
       } else {
         await createNotification(formData);
       }
 
+      setEditingId(null);
       setFormData({ title: '', message: '', type: 'internal' });
       fetchNotifications();
     } catch (error) {
@@ -54,7 +51,6 @@ const ManageNotifications = () => {
     }
   };
 
-  // Edit
   const handleEdit = (notification) => {
     setFormData({
       title: notification.title,
@@ -64,7 +60,6 @@ const ManageNotifications = () => {
     setEditingId(notification._id);
   };
 
-  // Delete
   const handleDelete = async (id) => {
     try {
       await deleteNotification(id);
@@ -75,50 +70,103 @@ const ManageNotifications = () => {
   };
 
   return (
-    <div>
-      <h2>Manage Notifications</h2>
+    <div className="flex h-screen">
+      {/* LEFT — Notifications List */}
+      <div
+        className={`p-6 overflow-y-auto transition-all duration-300 ${
+          editingId ? 'w-3/5' : 'w-full'
+        }`}
+      >
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-xl">Notifications</h2>
 
-      {/* Form */}
-      <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          name="title"
-          placeholder="Title"
-          value={formData.title}
-          onChange={handleChange}
-        />
-
-        <textarea
-          name="message"
-          placeholder="Message"
-          value={formData.message}
-          onChange={handleChange}
-        />
-
-        <select name="type" value={formData.type} onChange={handleChange}>
-          <option value="internal">Internal</option>
-          <option value="external">External</option>
-        </select>
-
-        <button type="submit">{editingId ? 'Update' : 'Create'}</button>
-      </form>
-
-      <hr />
-
-      {/* List */}
-      {notifications.map((n) => (
-        <div
-          key={n._id}
-          style={{ border: '1px solid #ccc', margin: 10, padding: 10 }}
-        >
-          <h4>{n.title}</h4>
-          <p>{n.message}</p>
-          <small>Type: {n.type}</small>
-          <br />
-          <button onClick={() => handleEdit(n)}>Edit</button>
-          <button onClick={() => handleDelete(n._id)}>Delete</button>
+          <button
+            onClick={() => setEditingId('new')}
+            className="bg-black text-white px-4 py-2"
+          >
+            Create Notification
+          </button>
         </div>
-      ))}
+
+        {notifications.map((n) => (
+          <div key={n._id} className="border border-black p-3 mb-3">
+            <h3 className="font-medium">{n.title}</h3>
+            <p className="text-sm">{n.message}</p>
+            <p className="text-xs mt-1">Type: {n.type}</p>
+
+            <div className="flex gap-3 mt-3 text-sm">
+              <button onClick={() => handleEdit(n)} className="underline">
+                Edit
+              </button>
+
+              <button onClick={() => handleDelete(n._id)} className="underline">
+                Delete
+              </button>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Divider */}
+      {editingId && <div className="w-px bg-black" />}
+
+      {/* RIGHT — Create / Edit */}
+      {editingId && (
+        <div className="w-2/5 p-6 transition-all duration-300">
+          <form
+            onSubmit={handleSubmit}
+            className="max-w-md border border-black p-6 flex flex-col gap-4"
+          >
+            <h2 className="text-lg">
+              {editingId === 'new'
+                ? 'Create Notification'
+                : 'Edit Notification'}
+            </h2>
+
+            <input
+              type="text"
+              name="title"
+              placeholder="Title"
+              value={formData.title}
+              onChange={handleChange}
+              className="border border-black p-2 outline-none"
+            />
+
+            <textarea
+              name="message"
+              placeholder="Message"
+              value={formData.message}
+              onChange={handleChange}
+              rows={4}
+              className="border border-black p-2 outline-none resize-none"
+            />
+
+            <select
+              name="type"
+              value={formData.type}
+              onChange={handleChange}
+              className="border border-black p-2 bg-white"
+            >
+              <option value="internal">Internal</option>
+              <option value="external">External</option>
+            </select>
+
+            <div className="flex gap-3">
+              <button type="submit" className="bg-black text-white px-4 py-2">
+                {editingId === 'new' ? 'Create' : 'Update'}
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setEditingId(null)}
+                className="border border-black px-4 py-2"
+              >
+                Cancel
+              </button>
+            </div>
+          </form>
+        </div>
+      )}
     </div>
   );
 };
