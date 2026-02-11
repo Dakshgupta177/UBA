@@ -1,59 +1,50 @@
-import './login.css';
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
-import api from '../../api/axios'; // axios instance
+import API from '../../api/axios';
+import { AuthContext } from '../../context/authContext.jsx';
 
-export default function Login() {
+const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
+  const { setUser } = useContext(AuthContext);
   const navigate = useNavigate();
 
-  const handleSubmit = async (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    setError('');
 
     try {
-      const res = await api.post('/api/auth/login', { email, password });
+      await API.post('/auth/login', { email, password });
 
-      if (res.data.success) {
-        // Login succeeded, navigate to notifications
-        navigate('/notifications');
+      const res = await API.get('/auth/me');
+      setUser(res.data.user);
+
+      if (res.data.user.role === 'admin') {
+        navigate('/admin');
       } else {
-        setError(res.data.message || 'Login failed');
+        alert('Not an admin');
       }
     } catch (err) {
-      console.error(err.response?.data);
-      setError(err.response?.data?.message || 'Login failed');
+      console.log('LOGIN ERROR:', err.response?.data || err.message);
+      alert(err.response?.data?.message || 'Login failed');
     }
   };
 
   return (
-    <div className="login-page">
-      <div className="login-card">
-        <h2>Login</h2>
-
-        {error && <div className="login-error">{error}</div>}
-
-        <form onSubmit={handleSubmit}>
-          <input
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="Email"
-            required
-          />
-
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            placeholder="Password"
-            required
-          />
-
-          <button type="submit">Login</button>
-        </form>
-      </div>
-    </div>
+    <form onSubmit={handleLogin}>
+      <h2>Admin Login</h2>
+      <input
+        type="email"
+        placeholder="Email"
+        onChange={(e) => setEmail(e.target.value)}
+      />
+      <input
+        type="password"
+        placeholder="Password"
+        onChange={(e) => setPassword(e.target.value)}
+      />
+      <button type="submit">Login</button>
+    </form>
   );
-}
+};
+
+export default Login;

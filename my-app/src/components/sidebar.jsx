@@ -1,26 +1,33 @@
-import { Link, NavLink, useNavigate } from 'react-router-dom';
-import './sidebar.css';
+import { Link, useNavigate } from 'react-router-dom';
+import { useContext } from 'react';
+import { AuthContext } from '../context/authContext.jsx';
 
-export default function Sidebar() {
+const Sidebar = () => {
+  const { logout } = useContext(AuthContext);
   const navigate = useNavigate();
 
-  const handleLogout = () => {
-    localStorage.removeItem('token');
-    navigate('/login');
+  const handleLogout = async () => {
+    await logout();
+    navigate('/');
   };
+
   return (
-    <aside className="sidebar">
-      <h2 className="logo">Admin</h2>
-
-      <nav>
-        <NavLink to="/notifications">Notifications</NavLink>
-        <NavLink to="/articles">Articles</NavLink>
-        <NavLink to="/contacts">Contacts</NavLink>
-      </nav>
-
-      <button className="logout" onClick={handleLogout}>
-        Logout
-      </button>
-    </aside>
+    <div style={{ width: '200px', background: '#eee', padding: '20px' }}>
+      <h3>Admin Panel</h3>
+      <ul>
+        <li>
+          <Link to="/admin/notifications">Manage Notifications</Link>
+        </li>
+        <li>
+          <Link to="/admin/articles">Manage Articles</Link>
+        </li>
+        <li>
+          <Link to="/admin/contacts">Manage Contacts</Link>
+        </li>
+      </ul>
+      <button onClick={handleLogout}>Logout</button>
+    </div>
   );
-}
+};
+
+export default Sidebar;

@@ -1,6 +1,6 @@
 import api from '../api/axios.js';
 
-const API_URL = '/api/admin/notification';
+const API_URL = '/admin/notification';
 
 export const getNotifications = async () => {
   const response = await api.get(API_URL);
