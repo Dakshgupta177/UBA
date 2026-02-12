@@ -14,6 +14,8 @@ const ManageArticles = () => {
   });
 
   const [editingId, setEditingId] = useState(null);
+  const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(null);
 
   const fetchArticles = async () => {
     try {
@@ -34,12 +36,16 @@ const ManageArticles = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setError(null);
+    setSuccess(null);
 
     try {
       if (editingId && editingId !== 'new') {
         await updateArticle(editingId, formData);
+        setSuccess('Article updated successfully');
       } else {
         await createArticle(formData);
+        setSuccess('Article created successfully');
       }
 
       setEditingId(null);
@@ -47,6 +53,7 @@ const ManageArticles = () => {
       fetchArticles();
     } catch (error) {
       console.error('Submit error:', error);
+      setError(error.response?.data?.message || 'Failed to save article. Please try again.');
     }
   };
 
@@ -61,10 +68,14 @@ const ManageArticles = () => {
   const handleDelete = async (id) => {
     if (window.confirm('Are you sure you want to delete this article?')) {
       try {
+        setError(null);
+        setSuccess(null);
         await deleteArticle(id);
+        setSuccess('Article deleted successfully');
         fetchArticles();
       } catch (error) {
         console.error('Delete error:', error);
+        setError(error.response?.data?.message || 'Failed to delete article.');
       }
     }
   };
@@ -98,6 +109,18 @@ const ManageArticles = () => {
             Create Article
           </button>
         </div>
+
+        {/* Error and Success Messages */}
+        {error && (
+          <div className="border border-black bg-red-50 p-3 mb-3">
+            <p className="text-red-700">{error}</p>
+          </div>
+        )}
+        {success && (
+          <div className="border border-black bg-green-50 p-3 mb-3">
+            <p className="text-green-700">{success}</p>
+          </div>
+        )}
 
         {articles.map((article) => (
           <div key={article._id} className="border border-black p-3 mb-3">
