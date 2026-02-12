@@ -42,18 +42,27 @@ const ManageArticles = () => {
     try {
       if (editingId && editingId !== 'new') {
         await updateArticle(editingId, formData);
-        setSuccess('Article updated successfully');
       } else {
         await createArticle(formData);
-        setSuccess('Article created successfully');
       }
 
       setEditingId(null);
       setFormData({ title: '', body: '' });
-      fetchArticles();
+      await fetchArticles();
+      
+      const successMessage = editingId && editingId !== 'new' 
+        ? 'Article updated successfully' 
+        : 'Article created successfully';
+      setSuccess(successMessage);
+      
+      // Auto-dismiss success message after 5 seconds
+      setTimeout(() => setSuccess(null), 5000);
     } catch (error) {
       console.error('Submit error:', error);
       setError(error.response?.data?.message || 'Failed to save article. Please try again.');
+      
+      // Auto-dismiss error message after 5 seconds
+      setTimeout(() => setError(null), 5000);
     }
   };
 
@@ -71,11 +80,17 @@ const ManageArticles = () => {
         setError(null);
         setSuccess(null);
         await deleteArticle(id);
+        await fetchArticles();
         setSuccess('Article deleted successfully');
-        fetchArticles();
+        
+        // Auto-dismiss success message after 5 seconds
+        setTimeout(() => setSuccess(null), 5000);
       } catch (error) {
         console.error('Delete error:', error);
         setError(error.response?.data?.message || 'Failed to delete article.');
+        
+        // Auto-dismiss error message after 5 seconds
+        setTimeout(() => setError(null), 5000);
       }
     }
   };
