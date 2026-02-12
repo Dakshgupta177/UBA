@@ -1,6 +1,6 @@
 import api from '../api/axios.js';
 
-const API_URL = '/api/articles';
+const API_URL = '/articles';
 
 export const getArticles = async () => {
   const response = await api.get(API_URL);
