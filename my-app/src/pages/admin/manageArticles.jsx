@@ -70,7 +70,10 @@ const ManageArticles = () => {
   };
 
   const formatDate = (date) => {
-    return new Date(date).toLocaleDateString('en-US', {
+    if (!date) return 'N/A';
+    const parsedDate = new Date(date);
+    if (isNaN(parsedDate.getTime())) return 'Invalid Date';
+    return parsedDate.toLocaleDateString('en-US', {
       year: 'numeric',
       month: 'short',
       day: 'numeric',
