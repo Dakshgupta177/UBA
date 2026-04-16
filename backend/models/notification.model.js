@@ -11,6 +11,7 @@ const notificationSchema = new mongoose.Schema(
     message: {
       type: String,
       required: true,
+      maxlength: 500,
     },
 
     type: {
@@ -20,16 +21,15 @@ const notificationSchema = new mongoose.Schema(
     },
 
     createdBy: {
-      // type: mongoose.Schema.Types.ObjectId,
-      // ref: "User",
-      // required: true,
-      type: String,
-      default: 'System',
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+      required: true,
     },
 
     expiresAt: {
       type: Date,
       default: () => new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+      //index: { expires: 0 } add cron instead later
     },
   },
   { timestamps: true },

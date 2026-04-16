@@ -71,7 +71,6 @@ const ManageNotifications = () => {
 
   return (
     <div className="flex h-screen">
-      {/* LEFT — Notifications List */}
       <div
         className={`p-6 overflow-y-auto transition-all duration-300 ${
           editingId ? 'w-3/5' : 'w-full'
@@ -94,6 +93,17 @@ const ManageNotifications = () => {
             <p className="text-sm">{n.message}</p>
             <p className="text-xs mt-1">Type: {n.type}</p>
 
+            <div className="text-xs mt-2 text-gray-700">
+              <p>
+                <span className="font-medium">Created By:</span>{' '}
+                {n.createdBy?.name || 'Unknown'}
+              </p>
+              <p>
+                <span className="font-medium">Email:</span>{' '}
+                {n.createdBy?.email || 'N/A'}
+              </p>
+            </div>
+
             <div className="flex gap-3 mt-3 text-sm">
               <button onClick={() => handleEdit(n)} className="underline">
                 Edit
@@ -107,10 +117,8 @@ const ManageNotifications = () => {
         ))}
       </div>
 
-      {/* Divider */}
       {editingId && <div className="w-px bg-black" />}
 
-      {/* RIGHT — Create / Edit */}
       {editingId && (
         <div className="w-2/5 p-6 transition-all duration-300">
           <form

@@ -1,8 +1,9 @@
 //Local
 import { Notification } from '../models/notification.model.js';
-import  asyncHandler  from '../utils/asynchandler.js';
+import asyncHandler from '../utils/asynchandler.js';
 import { ApiError } from '../utils/ApiError.js';
 import { isDBConnected } from '../db/db.js';
+import { User } from '../models/user.model.js';
 
 const createNotification = asyncHandler(async (req, res, next) => {
   if (!isDBConnected()) {
@@ -21,7 +22,9 @@ const createNotification = asyncHandler(async (req, res, next) => {
     title,
     message,
     type,
+    createdBy: req.user._id,
   });
+
   return res.status(201).json({
     success: true,
     data: notification,
@@ -43,7 +46,10 @@ const getNotifications = asyncHandler(async (req, res, next) => {
     filter.type = req.query.type;
   }
 
-  const notifications = await Notification.find(filter).sort({ createdAt: -1 });
+  const notifications = await Notification.find(filter)
+    .populate('createdBy', 'name email')
+    .sort({ createdAt: -1 });
+
   return res.status(200).json({
     success: true,
     data: notifications,
