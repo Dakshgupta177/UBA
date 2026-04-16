@@ -1,24 +1,21 @@
-//Core
 import express from 'express';
-
-//Local
 import {
   createNotification,
   getNotifications,
   updateNotification,
   deleteNotification,
 } from '../controllers/notification.controllers.js';
+
 import { getPublicNotifications } from '../controllers/public.notification.controllers.js';
-import {authMiddleware} from '../middleware/auth.middleware.js';
-import {adminOnly} from '../middleware/admin.middleware.js';
+import { authMiddleware } from '../middleware/auth.middleware.js';
+import { adminOnly } from '../middleware/admin.middleware.js';
 
-const notificationRouter = express.Router();
+const router = express.Router();
 
-notificationRouter.post('/admin/notification',authMiddleware,adminOnly, createNotification);
-notificationRouter.get('/admin/notification',authMiddleware,adminOnly, getNotifications);
-notificationRouter.put('/admin/notification/:id',authMiddleware,adminOnly, updateNotification);
-notificationRouter.delete('/admin/notification/:id',authMiddleware,adminOnly, deleteNotification);
+router.get('/public', getPublicNotifications);
+router.get('/', authMiddleware, adminOnly, getNotifications);
+router.post('/', authMiddleware, adminOnly, createNotification);
+router.put('/:id', authMiddleware, adminOnly, updateNotification);
+router.delete('/:id', authMiddleware, adminOnly, deleteNotification);
 
-notificationRouter.get('/notification' , getPublicNotifications);
-
-export { notificationRouter };
+export default router;

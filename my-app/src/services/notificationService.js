@@ -1,6 +1,6 @@
 import api from '../api/axios.js';
 
-const API_URL = '/admin/notification';
+const API_URL = '/notifications';
 
 export const getNotifications = async () => {
   const response = await api.get(API_URL);
@@ -23,6 +23,6 @@ export const deleteNotification = async (id) => {
 };
 
 export const getPublicNotifications = async () => {
-  const response = await api.get('/notification');
+  const response = await api.get('/notifications/public');
   return response.data;
 };

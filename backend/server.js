@@ -5,7 +5,7 @@ import cors from 'cors';
 
 //Local
 import { connectDB, isDBConnected } from './db/db.js';
-import { notificationRouter } from './routes/notification.routes.js';
+import notificationRouter from './routes/notification.routes.js';
 import articleRouter from './routes/article.routes.js';
 import authRouter from './routes/auth.routes.js';
 import contactUsRouter from './routes/contactUs.routes.js';
@@ -23,9 +23,10 @@ app.use(
   }),
 );
 
-app.use('/api', notificationRouter, contactUsRouter);
+app.use('/api/notifications', notificationRouter);
 app.use('/api/articles', articleRouter);
 app.use('/api/auth', authRouter);
+app.use('/api/contact', contactUsRouter);
 
 connectDB()
   .then(() => {
